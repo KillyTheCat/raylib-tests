@@ -44,7 +44,7 @@ int main(void) {
     // populate the mapPhysics array with PhysicsBodies that I need
     for (int i = 0; i < MAPHEIGHT; ++i)
         for (int j = 0; j < MAPWIDTH; ++j) {
-            if(map[j][i] == 1){
+            if(map[i][j] == 1){
                 mapPhysics[j][i] = CreatePhysicsBodyRectangle((Vector2) {tileHeight * j * x + ((tileHeight * x)/ 2), tileWidth * i * x + ((tileWidth * x)/2)}, tileWidth * x, tileHeight*x, 10);
                 mapPhysics[j][i]->enabled = false;
             }
