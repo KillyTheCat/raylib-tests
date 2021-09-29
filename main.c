@@ -19,6 +19,8 @@ int main(void) {
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitWindow(screenWidth, screenHeight, "My Epic Game written in C! Haha yes");
 
+    /* how this map works:
+    1 denotes a block that you can't go into, and 0 is empty space. You can configure it with raylib's texture loader library to have multiple textures and stuff. */
     int map[MAPHEIGHT][MAPWIDTH] = {
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
         {1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,1},
@@ -32,19 +34,17 @@ int main(void) {
         {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
     };
 
-    int transposeMap[MAPWIDTH][MAPHEIGHT];
-
     int tileWidth = screenWidth / 80;
     int tileHeight = screenHeight / 80;
 
     PhysicsBody mapPhysics[MAPWIDTH][MAPHEIGHT];
 
     int x = 7;
-
+    
+    // populate the mapPhysics array with PhysicsBodies that I need
     for (int i = 0; i < MAPHEIGHT; ++i)
         for (int j = 0; j < MAPWIDTH; ++j) {
-            transposeMap[j][i] = map[i][j];
-            if(transposeMap[j][i] == 1){
+            if(map[j][i] == 1){
                 mapPhysics[j][i] = CreatePhysicsBodyRectangle((Vector2) {tileHeight * j * x + ((tileHeight * x)/ 2), tileWidth * i * x + ((tileWidth * x)/2)}, tileWidth * x, tileHeight*x, 10);
                 mapPhysics[j][i]->enabled = false;
             }
@@ -53,14 +53,6 @@ int main(void) {
     int bodiesCount;
 
     while(!WindowShouldClose()) {
-
-        if(IsKeyPressed(KEY_UP)) {
-            time_t t;
-            srand((unsigned) time(&t));
-
-            transposeMap[rand()%MAPWIDTH][rand()%MAPHEIGHT] = 1;
-
-        }
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
@@ -76,6 +68,7 @@ int main(void) {
                 }
             }
 
+            // Draw the physics objects as green lines
             bodiesCount = GetPhysicsBodiesCount();
             for (int i = 0; i < bodiesCount; i++)
             {
